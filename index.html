@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ISS Tracker</title>
+  <!-- Load the Leaflet library -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+  integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+  crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+  integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+  crossorigin=""></script>
+  <!-- Load the jQuery library -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+  <!-- Create a container element for the map -->
+  <div id="map" style="position: absolute; top: 0; right: 0; bottom: 0; left: 0;"></div>
+
+  <script>
+    // Set up the map
+    var map = L.map('map').setView([0, 0], 3);
+    // Add a tile layer to the map
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+      maxZoom: 18
+    }).addTo(map);
+    // Add a marker to the map
+    var marker = L.marker([0, 0]).addTo(map);
+    // Set the marker icon
+    marker.setIcon(L.icon({
+      iconUrl: 'https://i.ibb.co/KLdFGDG/kisspng-international-space-station-space-shuttle-program-space-5ac0cd972b79a4-045317031522584983178.png',
+      iconSize: [50, 50],
+      iconAnchor: [25, 25]
+    }));
+    // Set the marker title
+    marker.bindPopup('International Space Station');
+    
+    // Update the marker position every 5 seconds
+    setInterval(function() {
+      // Make a GET request to the ISS location API
+      $.get('https://api.wheretheiss.at/v1/satellites/25544', function(data) {
+        // Update the marker position
+        marker.setLatLng([data.latitude, data.longitude]);
+      });
+    }, 5000);
+  </script>
+</body>
+</html>
